@@ -75,3 +75,9 @@ Plugins/*/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+MonsterSlayerVR/Binaries/
+MonsterSlayerVR/Content/ProceduralNaturePack/
+MonsterSlayerVR/Content/QuadrapedCreatures/
+MonsterSlayerVR/Content/Weapon_Pack/
+MonsterSlayerVR/Intermediate/
+MonsterSlayerVR/Saved/
