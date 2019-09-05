@@ -7,13 +7,16 @@
 		{
 			"Name": "MonsterSlayerVR",
 			"Type": "Runtime",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine"
+			]
 		}
 	],
 	"Plugins": [
 		{
 			"Name": "FMODStudio",
-			"Enabled": true
+			"Enabled": false
 		}
 	]
 }
