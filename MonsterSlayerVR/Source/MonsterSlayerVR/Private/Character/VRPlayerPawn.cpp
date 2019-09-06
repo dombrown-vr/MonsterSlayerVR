@@ -9,6 +9,7 @@ AVRPlayerPawn::AVRPlayerPawn()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	//MotionControllerRegistry();
+	SpawnCollisionHandlingMethod = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	auto RootScene = CreateDefaultSubobject<USceneComponent>(FName("PawnRoot"));
 	RootComponent = RootScene;
@@ -27,14 +28,15 @@ AVRPlayerPawn::AVRPlayerPawn()
 	LeftControllerComponent->SetTrackingSource(EControllerHand::Left);
 	RightControllerComponent->SetTrackingSource(EControllerHand::Right);
 
+	
+
 	SwordComponent = CreateDefaultSubobject<USwordComponent>(FName("Sword"));
 	SwordComponent->SetupAttachment(LeftControllerComponent, FName("rootGrip"));
 
 	ShieldComponent = CreateDefaultSubobject<UShieldComponent>(FName("Shield"));
 	ShieldComponent->SetupAttachment(RightControllerComponent, FName("rootGrip"));
 
-	SwordComponent->SetWorldRotation(FRotator(160.f, 0.f, 0.f)); // Hard-coded values that are appropriate for left handed use
-	ShieldComponent->SetWorldRotation(FRotator(180.f, 0.f, 0.f)); // TODO make this change based on player's hand preference
+
 	//ShieldComponent->SetWorldLocation(FVector(0.f, 5.f, 0.f));
 }
 
@@ -53,6 +55,8 @@ void AVRPlayerPawn::BeginPlay()
 	UHeadMountedDisplayFunctionLibrary::EnableHMD(true);
 	UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::Floor);
 
+	SwordComponent->SetWorldRotation(FRotator(160.f, 0.f, 0.f)); // Hard-coded values that are appropriate for left handed use
+	ShieldComponent->SetWorldRotation(FRotator(180.f, 0.f, 0.f)); // TODO make this change based on player's hand preference
 	
 }
 

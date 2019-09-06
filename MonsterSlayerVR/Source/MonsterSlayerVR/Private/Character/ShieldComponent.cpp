@@ -9,6 +9,9 @@ UShieldComponent::UShieldComponent()
 	if (!ensure(Mesh.Succeeded())) { return; }
 	SetSkeletalMesh(Mesh.Object);
 
+	SetGenerateOverlapEvents(true);
+	SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
 //	GripLocation = Mesh.Object->FindSocket(FName(TEXT("rootGrip")))->GetSocketLocation(this);
 }
 
