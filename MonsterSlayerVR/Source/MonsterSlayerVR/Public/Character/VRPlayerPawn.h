@@ -6,6 +6,10 @@
 #include "GameFramework/Pawn.h"
 #include "IMotionController.h"
 #include "IModularFeatures.h"
+#include "ConstructorHelpers.h"
+#include "HeadMountedDisplayFunctionLibrary.h"
+#include "Components/StaticMeshComponent.h"
+#include "MotionControllerComponent.h"
 #include "VRPlayerPawn.generated.h"
 
 
@@ -32,8 +36,17 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
+	void MotionControllerRegistry();
 	
 		IMotionController* Controller = nullptr;
 	
+		UPROPERTY(VisibleAnywhere)
+			UMotionControllerComponent* LeftControllerComponent = nullptr;
+
+		UPROPERTY(VisibleAnywhere)
+			UMotionControllerComponent* RightControllerComponent = nullptr;
+
+		UPROPERTY(VisibleAnywhere)
+			UStaticMeshComponent* LeftContMeshComp = nullptr;
 	
 };
