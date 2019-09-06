@@ -12,9 +12,12 @@ AVRPlayerPawn::AVRPlayerPawn()
 
 	auto RootScene = CreateDefaultSubobject<USceneComponent>(FName("PawnRoot"));
 	RootComponent = RootScene;
+	// Weird bug with Oculus spawning player too high up - temporary fix
+	RootComponent->SetWorldLocation(FVector(0.f, 0.f, -70.f));
 
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(FName("Player Camera"));
 	CameraComponent->SetupAttachment(RootComponent);
+	
 
 	LeftControllerComponent = CreateDefaultSubobject<UMotionControllerComponent>(FName("Motion L"));
 	LeftControllerComponent->SetupAttachment(RootComponent);
@@ -25,11 +28,18 @@ AVRPlayerPawn::AVRPlayerPawn()
 	RightControllerComponent->SetTrackingSource(EControllerHand::Right);
 
 	LeftContMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(FName("Left Mesh"));
+	RightContMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(FName("Right Mesh"));
 
 	auto LeftMesh = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Meshes/LeftTouchController.LeftTouchController'"));
 
 	LeftContMeshComp->SetStaticMesh(LeftMesh.Object);
 	LeftContMeshComp->SetupAttachment(LeftControllerComponent);
+
+	auto RightMesh = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Meshes/RightTouchController.RightTouchController'"));
+	
+	RightContMeshComp->SetStaticMesh(RightMesh.Object);
+	RightContMeshComp->SetupAttachment(RightControllerComponent);
+
 }
 
 AVRPlayerPawn::~AVRPlayerPawn()

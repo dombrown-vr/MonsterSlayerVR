@@ -49,6 +49,9 @@ private:
 
 		UPROPERTY(VisibleAnywhere)
 			UStaticMeshComponent* LeftContMeshComp = nullptr;
+
+		UPROPERTY(VisibleAnywhere)
+			UStaticMeshComponent* RightContMeshComp = nullptr;
 	
 		UPROPERTY(VisibleAnywhere)
 			UCameraComponent* CameraComponent = nullptr;
