@@ -27,19 +27,15 @@ AVRPlayerPawn::AVRPlayerPawn()
 	LeftControllerComponent->SetTrackingSource(EControllerHand::Left);
 	RightControllerComponent->SetTrackingSource(EControllerHand::Right);
 
-	LeftContMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(FName("Left Mesh"));
-	RightContMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(FName("Right Mesh"));
+	SwordComponent = CreateDefaultSubobject<USwordComponent>(FName("Sword"));
+	SwordComponent->SetupAttachment(LeftControllerComponent, FName("rootGrip"));
 
-	auto LeftMesh = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Meshes/LeftTouchController.LeftTouchController'"));
+	ShieldComponent = CreateDefaultSubobject<UShieldComponent>(FName("Shield"));
+	ShieldComponent->SetupAttachment(RightControllerComponent, FName("rootGrip"));
 
-	LeftContMeshComp->SetStaticMesh(LeftMesh.Object);
-	LeftContMeshComp->SetupAttachment(LeftControllerComponent);
-
-	auto RightMesh = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Meshes/RightTouchController.RightTouchController'"));
-	
-	RightContMeshComp->SetStaticMesh(RightMesh.Object);
-	RightContMeshComp->SetupAttachment(RightControllerComponent);
-
+	SwordComponent->SetWorldRotation(FRotator(160.f, 0.f, 0.f)); // Hard-coded values that are appropriate for left handed use
+	ShieldComponent->SetWorldRotation(FRotator(180.f, 0.f, 0.f)); // TODO make this change based on player's hand preference
+	//ShieldComponent->SetWorldLocation(FVector(0.f, 5.f, 0.f));
 }
 
 AVRPlayerPawn::~AVRPlayerPawn()

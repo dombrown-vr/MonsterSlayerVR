@@ -9,6 +9,8 @@
 #include "ConstructorHelpers.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Components/StaticMeshComponent.h"
+#include "SwordComponent.h"
+#include "ShieldComponent.h"
 #include "MotionControllerComponent.h"
 #include "Camera/CameraComponent.h"
 #include "VRPlayerPawn.generated.h"
@@ -48,10 +50,10 @@ private:
 			UMotionControllerComponent* RightControllerComponent = nullptr;
 
 		UPROPERTY(VisibleAnywhere)
-			UStaticMeshComponent* LeftContMeshComp = nullptr;
+			USwordComponent* SwordComponent = nullptr;
 
 		UPROPERTY(VisibleAnywhere)
-			UStaticMeshComponent* RightContMeshComp = nullptr;
+			UShieldComponent* ShieldComponent = nullptr;
 	
 		UPROPERTY(VisibleAnywhere)
 			UCameraComponent* CameraComponent = nullptr;
