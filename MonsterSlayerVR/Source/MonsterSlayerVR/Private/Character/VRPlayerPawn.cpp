@@ -12,7 +12,10 @@ AVRPlayerPawn::AVRPlayerPawn()
 
 	auto RootScene = CreateDefaultSubobject<USceneComponent>(FName("PawnRoot"));
 	RootComponent = RootScene;
-	UE_LOG(LogTemp, Warning, TEXT("Pawn Root Component = %s"), *RootComponent->GetName());
+
+	CameraComponent = CreateDefaultSubobject<UCameraComponent>(FName("Player Camera"));
+	CameraComponent->SetupAttachment(RootComponent);
+
 	LeftControllerComponent = CreateDefaultSubobject<UMotionControllerComponent>(FName("Motion L"));
 	LeftControllerComponent->SetupAttachment(RootComponent);
 	RightControllerComponent = CreateDefaultSubobject<UMotionControllerComponent>(FName("Motion R"));
@@ -32,8 +35,8 @@ AVRPlayerPawn::AVRPlayerPawn()
 AVRPlayerPawn::~AVRPlayerPawn()
 {
 	// Unregister controller
-	if (Controller)
-		IModularFeatures::Get().UnregisterModularFeature(IMotionController::GetModularFeatureName(), Controller);
+	//if (Controller)
+	//	IModularFeatures::Get().UnregisterModularFeature(IMotionController::GetModularFeatureName(), Controller);
 }
 
 // Called when the game starts or when spawned
@@ -42,7 +45,8 @@ void AVRPlayerPawn::BeginPlay()
 	Super::BeginPlay();
 
 	UHeadMountedDisplayFunctionLibrary::EnableHMD(true);
-	UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::Eye);
+	UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::Floor);
+
 	
 }
 

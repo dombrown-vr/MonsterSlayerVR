@@ -10,6 +10,7 @@
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Components/StaticMeshComponent.h"
 #include "MotionControllerComponent.h"
+#include "Camera/CameraComponent.h"
 #include "VRPlayerPawn.generated.h"
 
 
@@ -49,4 +50,6 @@ private:
 		UPROPERTY(VisibleAnywhere)
 			UStaticMeshComponent* LeftContMeshComp = nullptr;
 	
+		UPROPERTY(VisibleAnywhere)
+			UCameraComponent* CameraComponent = nullptr;
 };
