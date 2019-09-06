@@ -8,6 +8,8 @@
 #include "IModularFeatures.h"
 #include "VRPlayerPawn.generated.h"
 
+
+
 UCLASS()
 class MONSTERSLAYERVR_API AVRPlayerPawn : public APawn
 {
@@ -16,6 +18,7 @@ class MONSTERSLAYERVR_API AVRPlayerPawn : public APawn
 public:
 	// Sets default values for this pawn's properties
 	AVRPlayerPawn();
+	~AVRPlayerPawn();
 
 protected:
 	// Called when the game starts or when spawned
@@ -28,6 +31,9 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+private:
+	
+		IMotionController* Controller = nullptr;
 	
 	
 };
