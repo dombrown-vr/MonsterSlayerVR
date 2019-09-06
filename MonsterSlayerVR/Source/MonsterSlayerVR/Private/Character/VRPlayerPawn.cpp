@@ -10,6 +10,9 @@ AVRPlayerPawn::AVRPlayerPawn()
 	PrimaryActorTick.bCanEverTick = true;
 	//MotionControllerRegistry();
 
+	auto RootScene = CreateDefaultSubobject<USceneComponent>(FName("PawnRoot"));
+	RootComponent = RootScene;
+	UE_LOG(LogTemp, Warning, TEXT("Pawn Root Component = %s"), *RootComponent->GetName());
 	LeftControllerComponent = CreateDefaultSubobject<UMotionControllerComponent>(FName("Motion L"));
 	LeftControllerComponent->SetupAttachment(RootComponent);
 	RightControllerComponent = CreateDefaultSubobject<UMotionControllerComponent>(FName("Motion R"));
@@ -39,7 +42,7 @@ void AVRPlayerPawn::BeginPlay()
 	Super::BeginPlay();
 
 	UHeadMountedDisplayFunctionLibrary::EnableHMD(true);
-	UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::Floor);
+	UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::Eye);
 	
 }
 
