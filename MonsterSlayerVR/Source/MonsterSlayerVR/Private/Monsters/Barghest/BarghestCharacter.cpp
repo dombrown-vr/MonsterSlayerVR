@@ -6,6 +6,12 @@
 // Sets default values
 ABarghestCharacter::ABarghestCharacter()
 {
+
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+	AIControllerClass = ABarghestAIController::StaticClass();
+	AutoPossessAI = EAutoPossessAI::PlacedInWorld;
+
 	// TODO Move animation code to dedicated AnimationHandler class
 	TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
 	TriggerCapsule->InitCapsuleSize(150.f, 100.f);
@@ -15,10 +21,7 @@ ABarghestCharacter::ABarghestCharacter()
 	TriggerCapsule->OnComponentBeginOverlap.AddDynamic(this, &ABarghestCharacter::OnOverlapBegin);
 	TriggerCapsule->OnComponentEndOverlap.AddDynamic(this, &ABarghestCharacter::OnOverlapEnd);
 
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-	AIControllerClass = ABarghestAIController::StaticClass();
-	AutoPossessAI = EAutoPossessAI::PlacedInWorld;
+ 	
 	auto MeshFinder = ConstructorHelpers::FObjectFinder<USkeletalMesh>(TEXT("SkeletalMesh'/Game/Monsters/Barghest/Meshes/SK_BARGHEST.SK_BARGHEST'"));
 	if(MeshFinder.Succeeded())
 	{
@@ -56,12 +59,6 @@ void ABarghestCharacter::Tick(float DeltaTime)
 	FVector BlendParams(Length*100.f, 0.f, 0.f);
 	GetMesh()->GetSingleNodeInstance()->SetBlendSpaceInput(BlendParams);
 
-	TArray<AActor*> OverlappingComponents;
-	GetMesh()->GetOverlappingActors(OverlappingComponents);
-	for (auto Comp : OverlappingComponents)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("%s is overlapping with %s"), *GetName(), *Comp->GetName());
-	}
 
 }
 
@@ -69,8 +66,6 @@ void ABarghestCharacter::Tick(float DeltaTime)
 void ABarghestCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-
 }
 
 void ABarghestCharacter::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
