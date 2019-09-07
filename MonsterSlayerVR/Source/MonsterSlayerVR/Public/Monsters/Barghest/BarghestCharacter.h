@@ -6,9 +6,7 @@
 #include "GameFramework/Character.h"
 #include "BarghestAIController.h"
 #include "ConstructorHelpers.h"
-#include "Animation/AnimMontage.h"
-#include "Animation/AnimSingleNodeInstance.h"
-#include "Animation/BlendSpace1D.h"
+#include "BarghestAnimHandler.h"
 #include "Components/CapsuleComponent.h"
 #include "BarghestCharacter.generated.h"
 
@@ -40,7 +38,7 @@ private:
 	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	UPROPERTY()
-	class UBlendSpace1D* MovementBlendSpace = nullptr;
+		UBarghestAnimHandler* AnimHandler = nullptr;
 
 	UPROPERTY()
 		UCapsuleComponent* TriggerCapsule = nullptr;

@@ -29,10 +29,14 @@ ABarghestCharacter::ABarghestCharacter()
 		GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -95.f));
 		GetMesh()->SetRelativeRotation(FRotator(0.f, 90.f, 0.f));
 	}
-	
+	AnimHandler = CreateDefaultSubobject<UBarghestAnimHandler>("Anim Handler");
+	AnimHandler->SetMeshComponent(GetMesh());
+
 	auto MovementBlendSpaceFinder = ConstructorHelpers::FObjectFinder<UBlendSpace1D>(TEXT("BlendSpace1D'/Game/Monsters/Barghest/Animations/BARGHEST_Skeleton_BlendSpace1D.BARGHEST_Skeleton_BlendSpace1D'"));
 	if (ensure(MovementBlendSpaceFinder.Succeeded()))
-		MovementBlendSpace = MovementBlendSpaceFinder.Object;
+		AnimHandler->SetAnimation(MovementBlendSpaceFinder.Object);
+
+
 }
 
 // Called when the game starts or when spawned
@@ -40,9 +44,7 @@ void ABarghestCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetMesh()->PlayAnimation(MovementBlendSpace, true);
-	FVector BlendParams(0.f, 0.f, 0.f);
-	GetMesh()->GetSingleNodeInstance()->SetBlendSpaceInput(BlendParams);
+	
 	
 }
 
@@ -57,7 +59,9 @@ void ABarghestCharacter::Tick(float DeltaTime)
 	GetVelocity().ToDirectionAndLength(Direction, Length);
 	Length = Length / 600.f; // 600 is top movement speed
 	FVector BlendParams(Length*100.f, 0.f, 0.f);
-	GetMesh()->GetSingleNodeInstance()->SetBlendSpaceInput(BlendParams);
+
+	AnimHandler->SetSpeed(Length);
+	//GetMesh()->GetSingleNodeInstance()->SetBlendSpaceInput(BlendParams);
 
 
 }

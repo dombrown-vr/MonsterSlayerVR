@@ -10,6 +10,8 @@ UBarghestAnimHandler::UBarghestAnimHandler()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
+	
+
 	// ...
 }
 
@@ -18,8 +20,9 @@ UBarghestAnimHandler::UBarghestAnimHandler()
 void UBarghestAnimHandler::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
+	Mesh->PlayAnimation(Animation, true);
+	FVector BlendParams(0.f, 0.f, 0.f);
+	Mesh->GetSingleNodeInstance()->SetBlendSpaceInput(BlendParams);
 	
 }
 
@@ -32,3 +35,16 @@ void UBarghestAnimHandler::TickComponent(float DeltaTime, ELevelTick TickType, F
 	// ...
 }
 
+void UBarghestAnimHandler::SetMeshComponent(USkeletalMeshComponent* MeshToSet)
+{
+	Mesh = MeshToSet;
+}
+
+void UBarghestAnimHandler::SetAnimation(UBlendSpace1D* BlendSpaceToSet)
+{
+	Animation = BlendSpaceToSet;
+}
+
+void UBarghestAnimHandler::SetSpeed(float Speed)
+{
+}
