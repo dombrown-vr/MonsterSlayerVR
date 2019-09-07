@@ -6,6 +6,9 @@
 #include "GameFramework/Character.h"
 #include "BarghestAIController.h"
 #include "ConstructorHelpers.h"
+#include "Animation/AnimMontage.h"
+#include "Animation/AnimSingleNodeInstance.h"
+#include "Animation/BlendSpace1D.h"
 #include "BarghestCharacter.generated.h"
 
 UCLASS()
@@ -27,6 +30,9 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+private:
 
+	UPROPERTY()
+	class UBlendSpace1D* MovementBlendSpace = nullptr;
 	
 };

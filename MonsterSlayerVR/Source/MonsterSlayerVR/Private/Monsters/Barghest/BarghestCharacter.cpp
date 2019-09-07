@@ -10,20 +10,29 @@ ABarghestCharacter::ABarghestCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 	AIControllerClass = ABarghestAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorld;
-	auto Mesh = ConstructorHelpers::FObjectFinder<USkeletalMesh>(TEXT("SkeletalMesh'/Game/Monsters/Barghest/Meshes/SK_BARGHEST.SK_BARGHEST'"));
-	if(Mesh.Succeeded())
+	auto MeshFinder = ConstructorHelpers::FObjectFinder<USkeletalMesh>(TEXT("SkeletalMesh'/Game/Monsters/Barghest/Meshes/SK_BARGHEST.SK_BARGHEST'"));
+	if(MeshFinder.Succeeded())
 	{
-		GetMesh()->SetSkeletalMesh(Mesh.Object);
+		GetMesh()->SetSkeletalMesh(MeshFinder.Object);
 		GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -95.f));
 		GetMesh()->SetRelativeRotation(FRotator(0.f, 90.f, 0.f));
 	}
-	
+
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+
+	auto MovementBlendSpaceFinder = ConstructorHelpers::FObjectFinder<UBlendSpace1D>(TEXT("BlendSpace1D'/Game/Monsters/Barghest/Animations/BARGHEST_Skeleton_BlendSpace1D.BARGHEST_Skeleton_BlendSpace1D'"));
+	if (ensure(MovementBlendSpaceFinder.Succeeded()))
+		MovementBlendSpace = MovementBlendSpaceFinder.Object;
 }
 
 // Called when the game starts or when spawned
 void ABarghestCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	GetMesh()->PlayAnimation(MovementBlendSpace, true);
+	FVector BlendParams(25.f, 0.f, 0.f);
+	GetMesh()->GetSingleNodeInstance()->SetBlendSpaceInput(BlendParams);
 	
 }
 
@@ -31,6 +40,13 @@ void ABarghestCharacter::BeginPlay()
 void ABarghestCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	FVector Direction;
+	float Length;
+	GetVelocity().ToDirectionAndLength(Direction, Length);
+	//UE_LOG(LogTemp, Warning, TEXT("%s at %f"), *Direction.ToString(), Length);
+	Length = Length / 600.f; // 600 is top movement speed
+	FVector BlendParams(Length*100.f, 0.f, 0.f);
+	GetMesh()->GetSingleNodeInstance()->SetBlendSpaceInput(BlendParams);
 
 }
 
