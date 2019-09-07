@@ -8,20 +8,12 @@ ABarghestSkeletalMeshActor::ABarghestSkeletalMeshActor()
 {
 	auto BarghestSkeleton = ConstructorHelpers::FObjectFinder<USkeletalMesh>(TEXT("SkeletalMesh'/Game/QuadrapedCreatures/Barghest/Meshes/SK_BARGHEST.SK_BARGHEST'"));
 	if (ensure(BarghestSkeleton.Succeeded()))
-	{
-		
 		GetSkeletalMeshComponent()->SetSkeletalMesh(BarghestSkeleton.Object, true);
-	}
+	
 
 	auto MovementBlendSpaceFinder = ConstructorHelpers::FObjectFinder<UBlendSpace1D>(TEXT("BlendSpace1D'/Game/Monsters/Barghest/Animations/BARGHEST_Skeleton_BlendSpace1D.BARGHEST_Skeleton_BlendSpace1D'"));
 	if (ensure(MovementBlendSpaceFinder.Succeeded()))
-	{
 		MovementBlendSpace = MovementBlendSpaceFinder.Object;
-	}
-	else
-	{
-		
-	}
 
 }
 void ABarghestSkeletalMeshActor::BeginPlay()
