@@ -9,6 +9,7 @@
 #include "Animation/AnimMontage.h"
 #include "Animation/AnimSingleNodeInstance.h"
 #include "Animation/BlendSpace1D.h"
+#include "Components/CapsuleComponent.h"
 #include "BarghestCharacter.generated.h"
 
 UCLASS()
@@ -32,7 +33,16 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 private:
 
+	UFUNCTION()
+	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
 	UPROPERTY()
 	class UBlendSpace1D* MovementBlendSpace = nullptr;
+
+	UPROPERTY()
+		UCapsuleComponent* TriggerCapsule = nullptr;
 	
 };

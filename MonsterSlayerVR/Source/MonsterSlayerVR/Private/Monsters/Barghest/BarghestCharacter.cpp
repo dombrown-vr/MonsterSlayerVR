@@ -6,6 +6,15 @@
 // Sets default values
 ABarghestCharacter::ABarghestCharacter()
 {
+	// TODO Move animation code to dedicated AnimationHandler class
+	TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
+	TriggerCapsule->InitCapsuleSize(150.f, 100.f);
+	TriggerCapsule->SetCollisionProfileName(TEXT("Trigger"));
+	TriggerCapsule->SetupAttachment(RootComponent);
+
+	TriggerCapsule->OnComponentBeginOverlap.AddDynamic(this, &ABarghestCharacter::OnOverlapBegin);
+	TriggerCapsule->OnComponentEndOverlap.AddDynamic(this, &ABarghestCharacter::OnOverlapEnd);
+
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	AIControllerClass = ABarghestAIController::StaticClass();
@@ -17,9 +26,7 @@ ABarghestCharacter::ABarghestCharacter()
 		GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -95.f));
 		GetMesh()->SetRelativeRotation(FRotator(0.f, 90.f, 0.f));
 	}
-
-	GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-
+	
 	auto MovementBlendSpaceFinder = ConstructorHelpers::FObjectFinder<UBlendSpace1D>(TEXT("BlendSpace1D'/Game/Monsters/Barghest/Animations/BARGHEST_Skeleton_BlendSpace1D.BARGHEST_Skeleton_BlendSpace1D'"));
 	if (ensure(MovementBlendSpaceFinder.Succeeded()))
 		MovementBlendSpace = MovementBlendSpaceFinder.Object;
@@ -31,7 +38,7 @@ void ABarghestCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	GetMesh()->PlayAnimation(MovementBlendSpace, true);
-	FVector BlendParams(25.f, 0.f, 0.f);
+	FVector BlendParams(0.f, 0.f, 0.f);
 	GetMesh()->GetSingleNodeInstance()->SetBlendSpaceInput(BlendParams);
 	
 }
@@ -40,13 +47,21 @@ void ABarghestCharacter::BeginPlay()
 void ABarghestCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+
 	FVector Direction;
 	float Length;
 	GetVelocity().ToDirectionAndLength(Direction, Length);
-	//UE_LOG(LogTemp, Warning, TEXT("%s at %f"), *Direction.ToString(), Length);
 	Length = Length / 600.f; // 600 is top movement speed
 	FVector BlendParams(Length*100.f, 0.f, 0.f);
 	GetMesh()->GetSingleNodeInstance()->SetBlendSpaceInput(BlendParams);
+
+	TArray<AActor*> OverlappingComponents;
+	GetMesh()->GetOverlappingActors(OverlappingComponents);
+	for (auto Comp : OverlappingComponents)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s is overlapping with %s"), *GetName(), *Comp->GetName());
+	}
 
 }
 
@@ -55,5 +70,16 @@ void ABarghestCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+
+}
+
+void ABarghestCharacter::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Overlap Begin"));
+}
+
+void ABarghestCharacter::OnOverlapEnd(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Overlap End"));
 }
 

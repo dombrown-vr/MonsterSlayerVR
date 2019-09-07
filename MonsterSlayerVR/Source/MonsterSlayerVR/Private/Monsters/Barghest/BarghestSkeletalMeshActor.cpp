@@ -24,7 +24,7 @@ void ABarghestSkeletalMeshActor::BeginPlay()
 	if (ensure(Mesh && MovementBlendSpace))
 	{
 		Mesh->PlayAnimation(MovementBlendSpace, true);
-		FVector BlendParams(25.f, 0.f, 0.f);
+		FVector BlendParams(0.f, 0.f, 0.f);
 		Mesh->GetSingleNodeInstance()->SetBlendSpaceInput(BlendParams);
 	}
 
