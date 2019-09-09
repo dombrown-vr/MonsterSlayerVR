@@ -12,8 +12,11 @@ UBarghestAnimHandler::UBarghestAnimHandler()
 
 	auto MovementBlendSpaceFinder = ConstructorHelpers::FObjectFinder<UBlendSpace1D>(TEXT("BlendSpace1D'/Game/Monsters/Barghest/Animations/BARGHEST_Skeleton_BlendSpace1D.BARGHEST_Skeleton_BlendSpace1D'"));
 	if (ensure(MovementBlendSpaceFinder.Succeeded()))
-		SetAnimation(MovementBlendSpaceFinder.Object);
+		MovementAnim = MovementBlendSpaceFinder.Object;
 	
+	auto AnimMontageFinder = ConstructorHelpers::FObjectFinder<UAnimMontage>(TEXT("AnimMontage'/Game/Monsters/Barghest/Animations/BARGHEST_MONTAGE.BARGHEST_MONTAGE'"));
+	if (ensure(AnimMontageFinder.Succeeded()))
+		AnimMontage = AnimMontageFinder.Object;
 
 	// ...
 }
@@ -23,8 +26,7 @@ UBarghestAnimHandler::UBarghestAnimHandler()
 void UBarghestAnimHandler::BeginPlay()
 {
 	Super::BeginPlay();
-	Mesh->PlayAnimation(Animation, true);
-	Animation->
+	Mesh->PlayAnimation(MovementAnim, true);
 	
 }
 
@@ -33,28 +35,19 @@ void UBarghestAnimHandler::BeginPlay()
 void UBarghestAnimHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	// TODO Update the blendspace to reflect this state machine implementation
-
-	
-	// ...
 }
 
 void UBarghestAnimHandler::SetMeshComponent(USkeletalMeshComponent* MeshToSet)
 {
 	Mesh = MeshToSet;
 }
-
-void UBarghestAnimHandler::SetAnimation(UBlendSpace1D* BlendSpaceToSet)
-{
-	Animation = BlendSpaceToSet;
-}
-
 void UBarghestAnimHandler::SetAnimationState(EBarghestAnimState NewState)
 {
 	AnimState = NewState;
 
 	if (AnimState == EBarghestAnimState::Idle)
 	{
+		
 		FVector BlendParams(0.f, 0.f, 0.f);
 		Mesh->GetSingleNodeInstance()->SetBlendSpaceInput(BlendParams);
 	}
@@ -65,8 +58,12 @@ void UBarghestAnimHandler::SetAnimationState(EBarghestAnimState NewState)
 	}
 	else if (AnimState == EBarghestAnimState::Attacking)
 	{
-		FVector BlendParams(50.f, 0.f, 0.f);
-		Mesh->GetSingleNodeInstance()->SetBlendSpaceInput(BlendParams);
+		auto AnimInstance = Mesh->GetAnimInstance();
+		if (!ensure(AnimInstance)) { return; }
+		AnimInstance->Montage_Play(AnimMontage);
+		//AnimInstance->Montage_JumpToSection(FName(""))
+		//FVector BlendParams(50.f, 0.f, 0.f);
+		//Mesh->GetSingleNodeInstance()->SetBlendSpaceInput(BlendParams);
 	}
 }
 

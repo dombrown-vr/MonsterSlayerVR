@@ -39,8 +39,11 @@ private:
 	UFUNCTION()
 	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	//UPROPERTY(VisibleAnywhere)
+	//	UBarghestAnimHandler* AnimHandler = nullptr;
+
 	UPROPERTY(VisibleAnywhere)
-		UBarghestAnimHandler* AnimHandler = nullptr;
+		UAnimMontage* Montage = nullptr;
 
 	UPROPERTY(VisibleAnywhere)
 		UCapsuleComponent* TriggerCapsule = nullptr;

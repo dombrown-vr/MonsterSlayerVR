@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Animation/BlendSpace1D.h"
+#include "Animation/AnimMontage.h"
 #include "Animation/AnimSingleNodeInstance.h"
 #include "ConstructorHelpers.h"
 #include "BarghestAnimHandler.generated.h"
@@ -44,8 +45,6 @@ public:
 
 	void SetMeshComponent(USkeletalMeshComponent* MeshToSet);
 
-	void SetAnimation(UBlendSpace1D* BlendSpaceToSet);
-
 	void SetAnimationState(EBarghestAnimState NewState);
 
 private:
@@ -55,7 +54,12 @@ private:
 		USkeletalMeshComponent* Mesh = nullptr;
 
 	UPROPERTY(VisibleAnywhere)
-		UBlendSpace1D* Animation = nullptr; // TODO Make this more general
+		UAnimMontage* AnimMontage = nullptr;
+
+	UPROPERTY(VisibleAnywhere)
+		UBlendSpace1D* MovementAnim = nullptr; // TODO Make this more general
 	
 	EBarghestAnimState AnimState = EBarghestAnimState::Idle;
+
+	
 };

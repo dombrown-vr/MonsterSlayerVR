@@ -35,12 +35,16 @@ ABarghestCharacter::ABarghestCharacter()
 
 	auto AnimBlueprintFinder = ConstructorHelpers::FObjectFinder<UAnimBlueprint>(TEXT("AnimBlueprint'/Game/QuadrapedCreatures/Barghest/Meshes/Barghest_BP.Barghest_BP'"));
 	GetMesh()->SetAnimInstanceClass(AnimBlueprintFinder.Object->GeneratedClass);
+	//AnimHandler = CreateDefaultSubobject<UBarghestAnimHandler>("Anim Handler");
+	//AnimHandler->SetMeshComponent(GetMesh());
 }
 
 // Called when the game starts or when spawned
 void ABarghestCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	
 	CurrentHealth = MaxHealth;
 }
 
