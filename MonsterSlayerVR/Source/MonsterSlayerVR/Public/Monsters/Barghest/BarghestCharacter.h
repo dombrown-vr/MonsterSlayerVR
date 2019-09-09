@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "BarghestAIController.h"
+#include "BarghestAnimInstance.h"
 #include "ConstructorHelpers.h"
 #include "BarghestAnimHandler.h"
 #include "Components/CapsuleComponent.h"
@@ -39,8 +40,6 @@ private:
 	UFUNCTION()
 	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-	//UPROPERTY(VisibleAnywhere)
-	//	UBarghestAnimHandler* AnimHandler = nullptr;
 
 	UPROPERTY(VisibleAnywhere)
 		UAnimMontage* Montage = nullptr;

@@ -52,23 +52,10 @@ void ABarghestCharacter::Tick(float DeltaTime)
 	FVector Direction;
 	float Length;
 	GetVelocity().ToDirectionAndLength(Direction, Length);
-
-	/*if (OverlappingPlayerPawn)
-	{
-		AnimHandler->SetAnimationState(EBarghestAnimState::Attacking);
-	}
-	else 
-	{
-		if (Length > 0)
-		{
-			AnimHandler->SetAnimationState(EBarghestAnimState::Running);
-		}
-		else if (Length == 0)
-		{
-			AnimHandler->SetAnimationState(EBarghestAnimState::Idle);
-		}
-	}*/
-	
+	Length = Length / 6.f;
+	auto Anim = Cast<UBarghestAnimInstance>(GetMesh()->GetAnimInstance());
+	if (!ensure(Anim)) { return; }
+	Anim->SetSpeed(Length);
 }
 
 // Called to bind functionality to input
@@ -82,6 +69,7 @@ void ABarghestCharacter::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AA
 	if (OtherActor == GetPlayerPawn() && OtherActor)
 	{
 		OverlappingPlayerPawn = true;
+		PlayAnimMontage(Montage, 1.f, FName("bite_start"));
 	}
 }
 
