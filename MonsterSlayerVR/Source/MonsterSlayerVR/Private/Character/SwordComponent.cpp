@@ -12,10 +12,11 @@ USwordComponent::USwordComponent()
 	SetSkeletalMesh(SwordMesh.Object);
 
 	SetGenerateOverlapEvents(true);
-	SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+	SetNotifyRigidBodyCollision(true);
 	
-	
+	OnComponentBeginOverlap.AddDynamic(this, &USwordComponent::OnOverlapBegin);
 }
 
 void USwordComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction)
@@ -24,9 +25,9 @@ void USwordComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 }
 
-bool USwordComponent::ComponentOverlapMultiImpl(TArray<struct FOverlapResult>& OutOverlaps, const UWorld * InWorld, const FVector & Pos, const FQuat & Rot, ECollisionChannel TestChannel, const FComponentQueryParams & Params, const FCollisionObjectQueryParams & ObjectQueryParams) const
+void USwordComponent::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("OVERLAP"));
 
-	return false;
 }
+
+

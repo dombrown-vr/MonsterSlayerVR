@@ -24,6 +24,6 @@ public:
 	void BeginPlay() override;
 
 private:
-	UPROPERTY()
-		class UBlendSpace1D* MovementBlendSpace = nullptr;
+	UPROPERTY(VisibleAnywhere)
+		UBlendSpace1D* MovementBlendSpace = nullptr;
 };

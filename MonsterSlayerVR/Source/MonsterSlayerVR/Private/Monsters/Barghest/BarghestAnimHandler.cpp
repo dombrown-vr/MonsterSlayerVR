@@ -10,6 +10,9 @@ UBarghestAnimHandler::UBarghestAnimHandler()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
+	auto MovementBlendSpaceFinder = ConstructorHelpers::FObjectFinder<UBlendSpace1D>(TEXT("BlendSpace1D'/Game/Monsters/Barghest/Animations/BARGHEST_Skeleton_BlendSpace1D.BARGHEST_Skeleton_BlendSpace1D'"));
+	if (ensure(MovementBlendSpaceFinder.Succeeded()))
+		SetAnimation(MovementBlendSpaceFinder.Object);
 	
 
 	// ...
@@ -21,8 +24,7 @@ void UBarghestAnimHandler::BeginPlay()
 {
 	Super::BeginPlay();
 	Mesh->PlayAnimation(Animation, true);
-	FVector BlendParams(0.f, 0.f, 0.f);
-	Mesh->GetSingleNodeInstance()->SetBlendSpaceInput(BlendParams);
+	Animation->
 	
 }
 
@@ -31,7 +33,9 @@ void UBarghestAnimHandler::BeginPlay()
 void UBarghestAnimHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	// TODO Update the blendspace to reflect this state machine implementation
 
+	
 	// ...
 }
 
@@ -45,6 +49,27 @@ void UBarghestAnimHandler::SetAnimation(UBlendSpace1D* BlendSpaceToSet)
 	Animation = BlendSpaceToSet;
 }
 
-void UBarghestAnimHandler::SetSpeed(float Speed)
+void UBarghestAnimHandler::SetAnimationState(EBarghestAnimState NewState)
 {
+	AnimState = NewState;
+
+	if (AnimState == EBarghestAnimState::Idle)
+	{
+		FVector BlendParams(0.f, 0.f, 0.f);
+		Mesh->GetSingleNodeInstance()->SetBlendSpaceInput(BlendParams);
+	}
+	else if (AnimState == EBarghestAnimState::Running)
+	{
+		FVector BlendParams(25.f, 0.f, 0.f);
+		Mesh->GetSingleNodeInstance()->SetBlendSpaceInput(BlendParams);
+	}
+	else if (AnimState == EBarghestAnimState::Attacking)
+	{
+		FVector BlendParams(50.f, 0.f, 0.f);
+		Mesh->GetSingleNodeInstance()->SetBlendSpaceInput(BlendParams);
+	}
 }
+
+
+	
+

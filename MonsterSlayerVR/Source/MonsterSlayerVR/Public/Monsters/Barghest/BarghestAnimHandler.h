@@ -7,7 +7,18 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Animation/BlendSpace1D.h"
 #include "Animation/AnimSingleNodeInstance.h"
+#include "ConstructorHelpers.h"
 #include "BarghestAnimHandler.generated.h"
+
+
+UENUM()
+enum class EBarghestAnimState : uint8
+{
+	Idle,
+	Running,
+	Attacking,
+	Dieing
+};
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -16,6 +27,8 @@ class MONSTERSLAYERVR_API UBarghestAnimHandler : public UActorComponent
 	GENERATED_BODY()
 
 public:	
+
+
 	// Sets default values for this component's properties
 	UBarghestAnimHandler();
 
@@ -33,13 +46,16 @@ public:
 
 	void SetAnimation(UBlendSpace1D* BlendSpaceToSet);
 
-	void SetSpeed(float Speed);
+	void SetAnimationState(EBarghestAnimState NewState);
 
 private:
-	UPROPERTY()
+
+
+	UPROPERTY(VisibleAnywhere)
 		USkeletalMeshComponent* Mesh = nullptr;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 		UBlendSpace1D* Animation = nullptr; // TODO Make this more general
 	
+	EBarghestAnimState AnimState = EBarghestAnimState::Idle;
 };

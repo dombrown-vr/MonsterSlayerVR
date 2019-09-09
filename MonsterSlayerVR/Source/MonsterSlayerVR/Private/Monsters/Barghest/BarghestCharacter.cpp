@@ -14,14 +14,13 @@ ABarghestCharacter::ABarghestCharacter()
 
 	// TODO Move animation code to dedicated AnimationHandler class
 	TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
-	TriggerCapsule->InitCapsuleSize(150.f, 100.f);
+	TriggerCapsule->InitCapsuleSize(120.f, 100.f);
 	TriggerCapsule->SetCollisionProfileName(TEXT("Trigger"));
 	TriggerCapsule->SetupAttachment(RootComponent);
-
+ 	
 	TriggerCapsule->OnComponentBeginOverlap.AddDynamic(this, &ABarghestCharacter::OnOverlapBegin);
 	TriggerCapsule->OnComponentEndOverlap.AddDynamic(this, &ABarghestCharacter::OnOverlapEnd);
 
- 	
 	auto MeshFinder = ConstructorHelpers::FObjectFinder<USkeletalMesh>(TEXT("SkeletalMesh'/Game/Monsters/Barghest/Meshes/SK_BARGHEST.SK_BARGHEST'"));
 	if(MeshFinder.Succeeded())
 	{
@@ -31,12 +30,6 @@ ABarghestCharacter::ABarghestCharacter()
 	}
 	AnimHandler = CreateDefaultSubobject<UBarghestAnimHandler>("Anim Handler");
 	AnimHandler->SetMeshComponent(GetMesh());
-
-	auto MovementBlendSpaceFinder = ConstructorHelpers::FObjectFinder<UBlendSpace1D>(TEXT("BlendSpace1D'/Game/Monsters/Barghest/Animations/BARGHEST_Skeleton_BlendSpace1D.BARGHEST_Skeleton_BlendSpace1D'"));
-	if (ensure(MovementBlendSpaceFinder.Succeeded()))
-		AnimHandler->SetAnimation(MovementBlendSpaceFinder.Object);
-
-
 }
 
 // Called when the game starts or when spawned
@@ -45,7 +38,7 @@ void ABarghestCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	
-	
+	CurrentHealth = MaxHealth;
 }
 
 // Called every frame
@@ -53,17 +46,26 @@ void ABarghestCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-
 	FVector Direction;
 	float Length;
 	GetVelocity().ToDirectionAndLength(Direction, Length);
-	Length = Length / 600.f; // 600 is top movement speed
-	FVector BlendParams(Length*100.f, 0.f, 0.f);
 
-	AnimHandler->SetSpeed(Length);
-	//GetMesh()->GetSingleNodeInstance()->SetBlendSpaceInput(BlendParams);
-
-
+	if (OverlappingPlayerPawn)
+	{
+		AnimHandler->SetAnimationState(EBarghestAnimState::Attacking);
+	}
+	else 
+	{
+		if (Length > 0)
+		{
+			AnimHandler->SetAnimationState(EBarghestAnimState::Running);
+		}
+		else if (Length == 0)
+		{
+			AnimHandler->SetAnimationState(EBarghestAnimState::Idle);
+		}
+	}
+	
 }
 
 // Called to bind functionality to input
@@ -74,11 +76,23 @@ void ABarghestCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 void ABarghestCharacter::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Overlap Begin"));
+	if (OtherActor == GetPlayerPawn() && OtherActor)
+	{
+		OverlappingPlayerPawn = true;
+	}
 }
 
 void ABarghestCharacter::OnOverlapEnd(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Overlap End"));
+	if (OtherActor == GetPlayerPawn() && OtherActor)
+	{
+		OverlappingPlayerPawn = false;
+	}
 }
-
+APawn* ABarghestCharacter::GetPlayerPawn() const
+{
+	if (!GetWorld()->GetFirstPlayerController()) { return nullptr; }
+	auto PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
+	return PlayerPawn;
+	
+}

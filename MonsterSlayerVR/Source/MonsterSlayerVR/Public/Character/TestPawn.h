@@ -7,6 +7,7 @@
 #include "Components/SphereComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
 #include "Camera/CameraComponent.h"
+#include "SwordComponent.h"
 #include "TestPawn.generated.h"
 
 UCLASS()
@@ -39,6 +40,7 @@ private:
 
 	FVector2D MouseInput;
 	FVector2D PawnMovement;
+	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* Camera = nullptr;
 
 	

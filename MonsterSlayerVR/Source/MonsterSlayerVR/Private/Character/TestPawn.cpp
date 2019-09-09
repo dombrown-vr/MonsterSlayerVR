@@ -17,6 +17,11 @@ ATestPawn::ATestPawn()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(RootComponent);
 
+	auto Sword = CreateDefaultSubobject<USwordComponent>(TEXT("Sword"));
+
+	Sword->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	Sword->SetWorldRotation(FRotator(90.f, 0.f, 0.f));
+	Sword->SetWorldLocation(FVector(100.f, 0.f, 0.f));
 }
 
 // Called when the game starts or when spawned
