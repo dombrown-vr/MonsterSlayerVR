@@ -33,12 +33,18 @@ public:
 private:
 
 	UFUNCTION()
+	void Attack(AActor* ActorToAttack);
+
+	UFUNCTION()
 	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	APawn* GetPlayerPawn() const;
 
 	UFUNCTION()
 	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	UFUNCTION()
+		void OnCompHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 
 	UPROPERTY(VisibleAnywhere)
@@ -52,4 +58,8 @@ private:
 	float CurrentHealth;
 	
 	bool OverlappingPlayerPawn = false;
+
+	double TimeLastAttacked = 0.0;
+
+	double AttackTimeDelay = 1.5;
 };

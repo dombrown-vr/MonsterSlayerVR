@@ -9,6 +9,7 @@
 #include "ConstructorHelpers.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "SwordComponent.h"
 #include "ShieldComponent.h"
 #include "MotionControllerComponent.h"
@@ -57,4 +58,7 @@ private:
 	
 		UPROPERTY(VisibleAnywhere)
 			UCameraComponent* CameraComponent = nullptr;
+
+		UPROPERTY()
+			UCapsuleComponent* TriggerCapsule = nullptr;
 };

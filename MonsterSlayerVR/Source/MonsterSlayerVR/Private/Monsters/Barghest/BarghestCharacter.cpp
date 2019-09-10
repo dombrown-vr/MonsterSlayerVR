@@ -17,9 +17,13 @@ ABarghestCharacter::ABarghestCharacter()
 	TriggerCapsule->InitCapsuleSize(120.f, 100.f);
 	TriggerCapsule->SetCollisionProfileName(TEXT("Trigger"));
 	TriggerCapsule->SetupAttachment(RootComponent);
+
  	
 	TriggerCapsule->OnComponentBeginOverlap.AddDynamic(this, &ABarghestCharacter::OnOverlapBegin);
 	TriggerCapsule->OnComponentEndOverlap.AddDynamic(this, &ABarghestCharacter::OnOverlapEnd);
+	
+	
+
 
 	auto MeshFinder = ConstructorHelpers::FObjectFinder<USkeletalMesh>(TEXT("SkeletalMesh'/Game/Monsters/Barghest/Meshes/SK_BARGHEST.SK_BARGHEST'"));
 	if(MeshFinder.Succeeded())
@@ -49,13 +53,19 @@ void ABarghestCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// Work out movement speed for movement animation
 	FVector Direction;
 	float Length;
 	GetVelocity().ToDirectionAndLength(Direction, Length);
-	Length = Length / 6.f;
+	Length = Length * DeltaTime * 10.f;
 	auto Anim = Cast<UBarghestAnimInstance>(GetMesh()->GetAnimInstance());
 	if (!ensure(Anim)) { return; }
 	Anim->SetSpeed(Length);
+
+	if (GetPlayerPawn())
+		Attack(GetPlayerPawn());
+
+	
 }
 
 // Called to bind functionality to input
@@ -64,22 +74,41 @@ void ABarghestCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
+void ABarghestCharacter::Attack(AActor* ActorToAttack)
+{
+	auto ThisAttackTime = FPlatformTime::Seconds();
+	if ((ThisAttackTime > TimeLastAttacked + AttackTimeDelay) && OverlappingPlayerPawn)
+	{
+		TimeLastAttacked = ThisAttackTime;
+		PlayAnimMontage(Montage, 1.f, FName("bite_start"));
+	}
+	
+}
+
 void ABarghestCharacter::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	if (OtherActor == GetPlayerPawn() && OtherActor)
+	UE_LOG(LogTemp, Warning, TEXT("overlap with %s on component %s"), *OtherActor->GetName(), *OtherComp->GetName());
+	// Check that we are overlapping with the player pawn's collision capsule
+	if (OtherActor == GetPlayerPawn() && Cast<UCapsuleComponent>(OtherComp))
 	{
 		OverlappingPlayerPawn = true;
-		PlayAnimMontage(Montage, 1.f, FName("bite_start"));
 	}
 }
 
 void ABarghestCharacter::OnOverlapEnd(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
 {
-	if (OtherActor == GetPlayerPawn() && OtherActor)
+	// Check that we are overlapping with the player pawn's collision capsule
+	if (OtherActor == GetPlayerPawn() && Cast<UCapsuleComponent>(OtherComp))
 	{
 		OverlappingPlayerPawn = false;
 	}
 }
+
+void ABarghestCharacter::OnCompHit(UPrimitiveComponent * HitComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, FVector NormalImpulse, const FHitResult & Hit)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Hit"));
+}
+
 APawn* ABarghestCharacter::GetPlayerPawn() const
 {
 	if (!GetWorld()->GetFirstPlayerController()) { return nullptr; }

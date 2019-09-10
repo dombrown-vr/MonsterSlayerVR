@@ -5,3 +5,7 @@
 
 
 
+void UBarghestAnimInstance::SetSpeed(float SpeedToSet)
+{
+	Speed = SpeedToSet;
+}

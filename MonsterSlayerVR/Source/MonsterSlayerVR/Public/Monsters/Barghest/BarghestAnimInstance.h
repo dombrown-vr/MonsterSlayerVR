@@ -15,8 +15,11 @@ class MONSTERSLAYERVR_API UBarghestAnimInstance : public UAnimInstance
 	GENERATED_BODY()
 	
 public:
-	UFUNCTION(BlueprintImplementableEvent, Category = Animation)
-	void SetSpeed(float Speed);
-	
+
+	void SetSpeed(float SpeedToSet);
+
+protected:
+	UPROPERTY(BlueprintReadOnly, Category = Animation)
+		float Speed = 0.f;
 	
 };

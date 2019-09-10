@@ -17,6 +17,6 @@ void ABarghestAIController::Tick(float DeltaTime)
 		Difference = Difference.GetSafeNormal();
 		auto Rotation = Difference.Rotation();
 		Barghest->SetActorRotation(FRotator(0.f,Rotation.Yaw, 0.f));
-		MoveToActor(PlayerPawn, 100.f,true,true,false);
+		MoveToActor(PlayerPawn, 50.f,true,true,false);
 	}
 }

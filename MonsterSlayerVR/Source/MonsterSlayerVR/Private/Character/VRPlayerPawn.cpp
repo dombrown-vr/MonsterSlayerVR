@@ -18,6 +18,11 @@ AVRPlayerPawn::AVRPlayerPawn()
 
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(FName("Player Camera"));
 	CameraComponent->SetupAttachment(RootComponent);
+
+	TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
+	TriggerCapsule->InitCapsuleSize(120.f, 100.f);
+	TriggerCapsule->SetCollisionProfileName(TEXT("Trigger"));
+	TriggerCapsule->SetupAttachment(RootComponent);
 	
 
 	LeftControllerComponent = CreateDefaultSubobject<UMotionControllerComponent>(FName("Motion L"));
