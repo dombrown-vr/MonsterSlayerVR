@@ -85,6 +85,12 @@ void ABarghestCharacter::Attack(AActor* ActorToAttack)
 	
 }
 
+void ABarghestCharacter::HitBySword()
+{
+	PlayAnimMontage(Montage, 1.f, FName("hit_start"));
+	TimeLastAttacked = FPlatformTime::Seconds(); // Player attack disrupts monster's attacks
+}
+
 void ABarghestCharacter::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
 	UE_LOG(LogTemp, Warning, TEXT("overlap with %s on component %s"), *OtherActor->GetName(), *OtherComp->GetName());

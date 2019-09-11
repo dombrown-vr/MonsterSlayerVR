@@ -27,7 +27,11 @@ void USwordComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 void USwordComponent::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-
+	auto BarghestHit = Cast<ABarghestCharacter>(OtherActor);
+	if (BarghestHit)
+	{
+		BarghestHit->HitBySword();
+	}
 }
 
 

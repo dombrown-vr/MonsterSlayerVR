@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "ConstructorHelpers.h"
+#include "BarghestCharacter.h"
 #include "SwordComponent.generated.h"
 
 /**
