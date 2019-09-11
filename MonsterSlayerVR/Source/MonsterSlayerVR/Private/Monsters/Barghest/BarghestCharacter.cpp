@@ -34,11 +34,13 @@ ABarghestCharacter::ABarghestCharacter()
 	}
 
 	auto AnimFinder = ConstructorHelpers::FObjectFinder<UAnimMontage>(TEXT("AnimMontage'/Game/Monsters/Barghest/Animations/BARGHEST_MONTAGE.BARGHEST_MONTAGE'"));
-	if (AnimFinder.Succeeded())
+	if (ensure(AnimFinder.Succeeded()))
 		Montage = AnimFinder.Object;
 
-	auto AnimBlueprintFinder = ConstructorHelpers::FObjectFinder<UAnimBlueprint>(TEXT("AnimBlueprint'/Game/QuadrapedCreatures/Barghest/Meshes/Barghest_BP.Barghest_BP'"));
-	GetMesh()->SetAnimInstanceClass(AnimBlueprintFinder.Object->GeneratedClass);
+	auto AnimBlueprintFinder = ConstructorHelpers::FClassFinder<UBarghestAnimInstance>(TEXT("AnimBlueprint'/Game/QuadrapedCreatures/Barghest/Meshes/Barghest_BP'"));
+	if(ensure(AnimBlueprintFinder.Succeeded()))
+		GetMesh()->SetAnimInstanceClass(AnimBlueprintFinder.Class);
+
 }
 
 // Called when the game starts or when spawned

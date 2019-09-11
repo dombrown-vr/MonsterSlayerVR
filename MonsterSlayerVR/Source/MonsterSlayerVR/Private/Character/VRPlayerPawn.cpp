@@ -77,9 +77,12 @@ void AVRPlayerPawn::Tick(float DeltaTime)
 void AVRPlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
+	PlayerInputComponent->BindAction("Exit", IE_Pressed, this, &AVRPlayerPawn::ExitGame);
 }
-
+void AVRPlayerPawn::ExitGame()
+{
+	UKismetSystemLibrary::QuitGame(this, GetWorld()->GetFirstPlayerController(), EQuitPreference::Quit);
+}
 void AVRPlayerPawn::MotionControllerRegistry()
 {
 	// Look for available motion controllers
